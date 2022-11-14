@@ -13,6 +13,11 @@ blocks:
             - 'docker pull $DOCKER_USERNAME/dockerize-rails-myapp:latest || true'
             - 'docker build -t $DOCKER_USERNAME/dockerize-rails-myapp:latest --cache-from=$DOCKER_USERNAME/dockerize-rails-myapp:latest -f Dockerfile.production .'
             - 'docker push $DOCKER_USERNAME/dockerize-rails-myapp:latest'
+        - name: Build nginx
+          commands:
+            - 'docker pull $DOCKER_USERNAME/dockerize-rails-nginx:latest || true'
+            - 'docker build -t $DOCKER_USERNAME/dockerize-rails-nginx:latest --cache-from=$DOCKER_USERNAME/dockerize-rails-nginx:latest -f Dockerfile.nginx .'
+            - 'docker push $DOCKER_USERNAME/dockerize-rails-nginx:latest'
       secrets:
         - name: dockerize-rails
       prologue:
