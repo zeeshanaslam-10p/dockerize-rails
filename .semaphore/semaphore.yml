@@ -24,3 +24,22 @@ blocks:
         commands:
           - checkout
           - 'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
+  - name: Tests
+    task:
+      secrets:
+        - name: dockerize-rails
+      prologue:
+        commands:
+          - 'checkout '
+          - cp env-example .env
+          - cat docker-compose.test.yml | envsubst | tee docker-compose.yml
+          - 'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
+          - docker pull $DOCKER_USERNAME/dockerize-rails-myapp || true
+          - 'docker-compose run myapp rake db:reset'
+          - 'docker-compose run myapp rake db:migrate'
+          - 'docker-compose run myapp rake db:test:prepare'
+      jobs:
+        - name: Rails Tests
+          commands:
+            - 'docker-compose run myapp rake db:test:prepare'
+            - docker-compose run myapp rails test
