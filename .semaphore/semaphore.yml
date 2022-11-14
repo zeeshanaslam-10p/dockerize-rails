@@ -11,7 +11,7 @@ blocks:
         - name: Build myapp
           commands:
             - 'docker pull $DOCKER_USERNAME/dockerizing-ruby-myapp:latest || true'
-            - 'docker build -t $DOCKER_USERNAME/dockerizing-ruby-myapp:latest --cache-from=$DOCKER_USERNAME/dockerizing-ruby-drkiq:latest -f Dockerfile.production .'
+            - 'docker build -t $DOCKER_USERNAME/dockerizing-ruby-myapp:latest --cache-from=$DOCKER_USERNAME/dockerizing-ruby-myapp:latest -f Dockerfile.production .'
             - 'docker push $DOCKER_USERNAME/dockerizing-ruby-myapp:latest'
       secrets:
         - name: dockerize-rails
