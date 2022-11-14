@@ -41,5 +41,4 @@ blocks:
       jobs:
         - name: Rails Tests
           commands:
-            - 'docker-compose run myapp rake db:test:prepare'
             - docker-compose run myapp rails test
