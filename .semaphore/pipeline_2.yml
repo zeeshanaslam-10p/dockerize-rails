@@ -1,0 +1,26 @@
+version: v1.0
+name: Pipeline 2
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+blocks:
+  - name: Build
+    task:
+      jobs:
+        - name: Docker build
+          commands:
+            - checkout
+            - sudo pip install awscli
+            - aws ecr get-login --no-include-email | bash
+            - 'docker pull "${ECR_REGISTRY}:latest" || true'
+            - 'docker build -t "${ECR_REGISTRY}:${SEMAPHORE_WORKFLOW_ID}" --cache-from "${ECR_REGISTRY}:latest" -f Dockerfile.production .'
+            - docker images
+            - 'docker push "${ECR_REGISTRY}:${SEMAPHORE_WORKFLOW_ID}"'
+      secrets:
+        - name: AWS
+      env_vars:
+        - name: AWS_DEFAULT_REGION
+          value: us-east-1
+        - name: ECR_REGISTRY
+          value: 541445417339.dkr.ecr.us-east-1.amazonaws.com/semaphore-demo-ruby-kubernetes
